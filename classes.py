@@ -7,6 +7,10 @@ class Individual(object):
     self.distance = None
     self.fitness = None
 
+  def get_nvehicle():
+    nvehicle = len(self.chromosome)
+    return nvehicle
+
 
 class Node(object):
 
