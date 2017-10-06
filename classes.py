@@ -4,6 +4,7 @@ class Individual(object):
   
   def __init__(self, chromosome):
     self.chromosome = chromosome
+    self.distance = None
     self.fitness = None
 
 
