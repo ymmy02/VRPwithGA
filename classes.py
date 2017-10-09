@@ -7,7 +7,7 @@ class Individual(object):
     self.distance = None
     self.fitness = None
 
-  def get_nvehicle():
+  def get_nvehicle(self):
     nvehicle = len(self.chromosome)
     return nvehicle
 
@@ -15,20 +15,20 @@ class Individual(object):
 class Node(object):
 
   def __init__(self, id_, type_, position, demand):
-    self.id_ = id_
-    self.type_ = type_
-    self.position = position
-    self.demand = demand
+    self._id = id_
+    self._type = type_
+    self._position = position
+    self._demand = demand
 
   # Getter
-  def get_id():
-    return self.id_
+  def get_id(self):
+    return self._id
 
-  def get_type():
-    return self.type_
+  def get_type(self):
+    return self._type
 
-  def get_pos():
-    return self.position
+  def get_pos(self):
+    return self._position
 
-  def get_dem():
-    return self.demand
+  def get_dem(self):
+    return self._demand
