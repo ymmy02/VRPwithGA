@@ -32,3 +32,29 @@ class Node(object):
 
   def get_dem(self):
     return self._demand
+
+
+class NodeList(list):
+  
+  def __init__(self, capacity):
+    list.__init__(self)
+    self._capacity = capacity
+    self._depot = None
+    self._is_first_get_depot = True
+
+  def get_depot(self):
+    if self._is_first_get_depot:
+      for node in self:
+        if node.get_type() == 0:
+          self._depot = node
+          self._is_first_get_depot = False
+          return self._depot
+    return self._depot
+
+  def is_feasible(self, route):
+    amount = 0
+    for node in self:
+      if node.get_id() in route:
+        amount += node.get_dem()
+    is_feasible = (amount < self._capacity)
+    return is_feasible
