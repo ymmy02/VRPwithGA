@@ -4,7 +4,8 @@ Language : Python
 
 ## Assumption
 
-One single depot
+- One single depot
+- All vehicles have the same capacity
 
 ## Dataset
 
