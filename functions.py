@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 from classes import Node
 
@@ -28,9 +27,9 @@ def _calc_one_vehicle_distance(nodes, route)
 ##########
 # Public #
 ##########
-def calc_distance(nodes, routes):
+def calc_distance(nodes, chromosome):
   total_distance = 0
-  for route in routes:
+  for route in chromosome:
     total_distance += \
         _calc_one_vehicle_distance(nodes, route)
   return total_distance
