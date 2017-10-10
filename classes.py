@@ -49,6 +49,9 @@ class NodeList(list):
           return self._depot
     return self._depot
 
+  def get_customers_id_list(self):
+    return [costomer.get_id() for costomer in self if costomer.get_type()==1]
+
   def is_feasible(self, route):
     amount = 0
     for node in self:
