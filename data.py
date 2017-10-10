@@ -4,8 +4,7 @@ import numpy as np
 from classes import Node, NodeList
 
 
-def loaddataset(filename):
-  filename='dataset/A-n32-k05.xml'
+def loaddataset(filename='dataset/A-n32-k05.xml'):
   tree = ET.parse(filename)
   root = tree.getroot()
 
