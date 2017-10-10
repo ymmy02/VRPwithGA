@@ -1,8 +1,5 @@
 import random
 
-from classes import Individual
-
-
 ###########
 # Private #
 ###########
