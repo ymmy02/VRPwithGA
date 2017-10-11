@@ -9,7 +9,7 @@ import selection
 import crossover
 import mutation
 
-POPULATION = 300
+POPULATION = 100
 GSPAN = 100
 
 def flatten(chromosome):
@@ -42,10 +42,23 @@ def set_distance(nodes, indv_list):
   for indv in indv_list:
     indv.distance = calc_distance(nodes, indv.chromosome)
 
+def remove_duplication(indv_list):
+  nodupl_list = [indv_list[0]]
+  for indv1 in indv_list[1:]:
+    flag_add = True
+    for indv2 in nodupl_list:
+      if indv1 == indv2:
+        flag_add = False
+        break
+    if flag_add:
+      nodupl_list.append(indv1)
+  return nodupl_list
+
 def print_log(generation, indv_list):
   print("### Best Solutions of Generation " + str(generation) + " ###")
   pareto_ranking_list = make_pareto_ranking_list(indv_list)
-  best_solutions = pareto_ranking_list[0]
+  best_solutions = remove_duplication(pareto_ranking_list[0])
+    
   for best_indv in best_solutions:
     vehicles = best_indv.get_nvehicle()
     distance = best_indv.distance
@@ -90,7 +103,7 @@ def main(filename):
   # Pick Up Best Solutions #
   ##########################
   pareto_ranking_list = make_pareto_ranking_list(parents)
-  best_solutions = pareto_ranking_list[0]
+  best_solutions = remove_duplication(pareto_ranking_list[0])
 
   #############
   # Vizualize #
