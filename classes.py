@@ -52,6 +52,11 @@ class NodeList(list):
   def get_customers_id_list(self):
     return [costomer.get_id() for costomer in self if costomer.get_type()==1]
 
+  def get_node_pos_from_id(self, id_):
+    for node in self:
+      if node.get_id() == id_:
+        return node.get_pos()
+
   def is_feasible(self, route):
     amount = 0
     for node in self:

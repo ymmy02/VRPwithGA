@@ -1,6 +1,7 @@
 import random
 import copy
 
+from functions import remove_null_route
 
 ###########
 # Private #
@@ -27,8 +28,9 @@ def _insertion(chromosome, nodes, rate=0.02):
   size = len(_flatten(chromosome))
   for _ in range(size):
     if random.random() < rate:
-      _random_choice_and_reinsert(chromosome)
-  return tmp
+      _random_choice_and_reinsert(chromosome, nodes)
+      chromosome = remove_null_route(chromosome)
+  return chromosome
 
 ##########
 # Public #
@@ -39,5 +41,6 @@ def insertion(offsprings, nodes, rate=0.2, irate=0.02):
     tmp = copy.deepcopy(indv)
     if random.random() < rate:
       tmp.chromosome = _insertion(indv.chromosome, nodes, irate)
-    new_salesman_list.append(tmp)
-  return new_salesman_list
+    tmp.chromosome = remove_null_route(tmp.chromosome)    # Remove the route which has no nodes
+    new_offsprings.append(tmp)
+  return new_offsprings

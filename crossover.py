@@ -1,7 +1,8 @@
 import random
 import copy
+import time
 
-#from classes import Individual
+from functions import remove_null_route
 
 ###########
 # Private #
@@ -51,17 +52,18 @@ def _route_crossover(nodes, ch1, ch2):
 
 #===<Best Cost Route Crossover>===#
 def _delete_nodes(chromosome, route):
-  for node in route:
-    for rt in chromosome:
-      if node in rt:
-        rt.remove(node)
-        break
+  remove_index_list = []
+  chromosome_deleated = []
+  for rt in chromosome:
+    route_deleated = [node for node in rt if node not in route]
+    chromosome_deleated.append(route_deleated)
+  return chromosome_deleated
 
 def _best_cost_route_crossover(nodes, ch1, ch2):
   route1 = random.choice(ch1)
   route2 = random.choice(ch2)
-  _delete_nodes(ch1, route2)
-  _delete_nodes(ch2, route1)
+  ch1 = _delete_nodes(ch1, route2)
+  ch2 = _delete_nodes(ch2, route1)
   _insert_node(nodes, ch1, route2)
   _insert_node(nodes, ch2, route1)
   return ch1, ch2
@@ -80,6 +82,8 @@ def route_crossover(offsprings, nodes, rate=0.5):
     if random.random() < rate:
       (tmp1.chromosome, tmp2.chromosome) =        \
           _route_crossover(nodes, indv1.chromosome, indv2.chromosome)
+    tmp1.chromosome = remove_null_route(tmp1.chromosome)   # Remove the route which has no nodes
+    tmp2.chromosome = remove_null_route(tmp2.chromosome)
     new_offsprings.append(tmp1)
     new_offsprings.append(tmp2)
   return new_offsprings
@@ -87,7 +91,7 @@ def route_crossover(offsprings, nodes, rate=0.5):
 
 def best_cost_route_crossover(offsprings, nodes, rate=0.5):
   new_offsprings = []
-  half = len(offsprings)/2
+  half = int(len(offsprings)/2)
 
   for (indv1, indv2) in zip (offsprings[0:half], offsprings[half:]):
     tmp1 = copy.deepcopy(indv1)
@@ -95,6 +99,8 @@ def best_cost_route_crossover(offsprings, nodes, rate=0.5):
     if random.random() < rate:
       (tmp1.chromosome, tmp2.chromosome) =        \
           _best_cost_route_crossover(nodes, indv1.chromosome, indv2.chromosome)
+    tmp1.chromosome = remove_null_route(tmp1.chromosome)   # Remove the route which has no nodes
+    tmp2.chromosome = remove_null_route(tmp2.chromosome)
     new_offsprings.append(tmp1)
     new_offsprings.append(tmp2)
   return new_offsprings
