@@ -44,17 +44,22 @@ def _make_current_ranking_list(current_rank_candidates):
   nondominated_list = []
 
   for (i, candidate) in enumerate(current_rank_candidates):
+    flag_dominated = False
     if candidate in dominated_list:
-      break
+      continue
     for counterpart in current_rank_candidates[i+1:]:
+      if counterpart in dominated_list:
+        continue
       does_left_dominate_right = \
           _does_left_dominate_right(candidate, counterpart)
       if does_left_dominate_right > 0:
         dominated_list.append(counterpart)
       elif does_left_dominate_right < 0:
+        flag_dominated = True
         dominated_list.append(candidate)
         break
-    nondominated_list.append(candidate)
+    if not flag_dominated:
+      nondominated_list.append(candidate)
 
   return nondominated_list, dominated_list
 

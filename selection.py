@@ -23,6 +23,9 @@ def tournament(parents, tournament_size=3):
   return offsprings 
 
 
+def _flatten(chromosome):
+  return [node for route in chromosome for node in route]
+
 def pareto_ranking(parents):
   indv_list = parents
   ranking_list = []
@@ -31,7 +34,6 @@ def pareto_ranking(parents):
   ranking_list = make_pareto_ranking_list(indv_list)
 
   size = len(ranking_list)
-  print(size)
   npart = int((size*(size+1)) / 2)
   part = 1.0 / npart
 
