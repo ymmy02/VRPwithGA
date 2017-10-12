@@ -115,6 +115,8 @@ if __name__ == '__main__':
   # File Check
   if argc != 2:
     filename = 'dataset/A-n32-k05.xml'
+  else:
+    filename = argvs[1]
   if not os.path.exists(filename):
     print("!!!!! " + filename + " Does NOT Exist !!!!!")
     sys.exit()
