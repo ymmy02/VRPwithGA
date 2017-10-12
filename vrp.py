@@ -2,14 +2,13 @@ import sys, os
 import random
 
 from classes import Individual
-#from data import loaddataset, vizualize
-from data import loaddataset
+from data import loaddataset, visualize_result
 from functions import calc_distance, make_pareto_ranking_list
 import selection
 import crossover
 import mutation
 
-POPULATION = 100
+POPULATION = 200
 GSPAN = 100
 
 def flatten(chromosome):
@@ -106,9 +105,9 @@ def main(filename):
   best_solutions = remove_duplication(pareto_ranking_list[0])
 
   #############
-  # Vizualize #
+  # Visualize #
   #############
-  #vizualize(best_solutions)
+  visualize_result(nodes, best_solutions)
 
 if __name__ == '__main__':
   argvs = sys.argv
