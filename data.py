@@ -28,23 +28,42 @@ def loaddataset(filename='dataset/A-n32-k05.xml'):
 def visualize_result(nodes, solutions):
   G = nx.Graph()
   depot = nodes.get_depot()
+  colors = ['black', 'green', 'cyan', 'magenta', 'red', 'blue']
+
   # Add nodes
   G.add_node(depot.get_id(), pos=depot.get_pos(), color='blue')
   for customer in nodes.get_customers():
     G.add_node(customer.get_id(), pos=customer.get_pos(), color='red')
 
   for (index, solution) in enumerate(solutions):
+    edge_list = []
     G.remove_edges_from(list(G.edges()))
     plt.clf()
 
     for route in solution.chromosome:
-      G.add_edge(depot.get_id(), route[0])
+      edges = []
+      edges.append((depot.get_id(), route[0]))
       for i in range(len(route)-1):
-        G.add_edge(route[i], route[i+1])
-      G.add_edge(route[-1], depot.get_id())
-      positions = nx.get_node_attributes(G,'pos')
+        edges.append((route[i], route[i+1]))
+      edges.append((route[-1], depot.get_id()))
+      edge_list.append(edges)
 
+    for edges in edge_list:
+      G.add_edges_from(edges)
+
+    # Draw Nodes
     positions = {id_: (x, y) for (id_, (x, y)) in nx.get_node_attributes(G, 'pos').items()}
-    #nx.draw(G, positions, with_labels=True, node_size=0)
     nx.draw(G, positions, with_labels=True)
+    nx.draw_networkx_nodes(G,positions,
+                           nodelist=[depot.get_id()],
+                           node_color='blue',)
+    nx.draw_networkx_nodes(G,positions,
+                           nodelist=nodes.get_customers_id_list(),
+                           node_color='r',)
+    # Draw Edges
+    for (i, edges) in enumerate(edge_list):
+      nx.draw_networkx_edges(G,positions,
+                             edgelist=edges,
+                             edge_color=colors[i%(len(colors))])
+
     plt.savefig("solution" + str(index).zfill(3) + ".png")
