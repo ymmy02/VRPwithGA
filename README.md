@@ -31,7 +31,8 @@ http://www.vrp-rep.org/datasets/item/2014-0000.html
 
 ## Technique
 
-- Pareto Ranking Selection
+- Weight Sum Method
+- Tournament Selection
 - Best Cost Route Crossover
 - Insert Mutation
 

@@ -3,7 +3,8 @@ import random
 
 from classes import Individual
 from data import loaddataset, visualize_result
-from functions import calc_distance, make_pareto_ranking_list
+#from functions import calc_distance, make_pareto_ranking_list
+from functions import calc_distance, weight_sum_evaluate
 import selection
 import crossover
 import mutation
@@ -41,6 +42,11 @@ def set_distance(nodes, indv_list):
   for indv in indv_list:
     indv.distance = calc_distance(nodes, indv.chromosome)
 
+def set_fitness(indv_list):
+  for indv in indv_list:
+    indv.fitness = weight_sum_evaluate(indv.get_nvehicle(), indv.distance,
+                                       w_nvehicle=100, w_distance=0.1)
+
 def remove_duplication(indv_list):
   nodupl_list = [indv_list[0]]
   for indv1 in indv_list[1:]:
@@ -55,13 +61,13 @@ def remove_duplication(indv_list):
 
 def print_log(generation, indv_list):
   print("### Best Solutions of Generation " + str(generation) + " ###")
-  pareto_ranking_list = make_pareto_ranking_list(indv_list)
-  best_solutions = remove_duplication(pareto_ranking_list[0])
-    
-  for best_indv in best_solutions:
-    vehicles = best_indv.get_nvehicle()
-    distance = best_indv.distance
-    print("Vehicles : " + str(vehicles) + " Distance : " + str(distance))
+  best_indv = indv_list[0]
+  for indv in indv_list:
+    if indv.fitness < best_indv.fitness:
+      best_indv = indv
+  vehicles = best_indv.get_nvehicle()
+  distance = best_indv.distance
+  print("Vehicles : " + str(vehicles) + " Distance : " + str(distance))
 
 def does_end(loopcount):
   if loopcount > GSPAN:
@@ -78,6 +84,7 @@ def main(filename):
   parents = create_indviduals(POPULATION, nodes)
   offsprings = []
   set_distance(nodes, parents)
+  set_fitness(parents)
     
   #############
   # Main Loop #
@@ -85,7 +92,7 @@ def main(filename):
   loopcount = 0
   while not does_end(loopcount):
     # Selection
-    offsprings = selection.pareto_ranking(parents)
+    offsprings = selection.tournament(parents, tournament_size=3)
     # Crossover
     offsprings = crossover.best_cost_route_crossover(offsprings, nodes, rate=0.5)
     # Mutation
@@ -94,6 +101,8 @@ def main(filename):
     parents = offsprings[:]
     # Calc Distance
     set_distance(nodes, parents)
+    # Calc Fitness
+    set_fitness(parents)
     # Print Log
     loopcount += 1
     print_log(loopcount, parents)
@@ -101,13 +110,15 @@ def main(filename):
   ##########################
   # Pick Up Best Solutions #
   ##########################
-  pareto_ranking_list = make_pareto_ranking_list(parents)
-  best_solutions = remove_duplication(pareto_ranking_list[0])
+  best_indv = parents[0]
+  for indv in parents:
+    if indv.fitness < best_indv.fitness:
+      best_indv = indv
 
   #############
   # Visualize #
   #############
-  visualize_result(nodes, best_solutions)
+  visualize_result(nodes, [best_indv])
 
 if __name__ == '__main__':
   argvs = sys.argv
